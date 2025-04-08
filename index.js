@@ -20,8 +20,8 @@ const defaultSettings = {
 extension_settings[extensionName] = { ...defaultSettings, ...(extension_settings[extensionName] || {}) };
 
 // === 상수 정의 ===
-const KEYWORD_ALL_ON = "_all_on_"; // /regexSet 에서만 사용
-const KEYWORD_ALL_OFF = "_all_off_"; // /regexSet 에서만 사용
+const KEYWORD_ALL_ON = "_all_on_"; // /RegexSet 에서만 사용
+const KEYWORD_ALL_OFF = "_all_off_"; // /RegexSet 에서만 사용
 
 // === 디버깅이 추가된 헬퍼 함수들 (변경 없음) ===
 
@@ -226,7 +226,7 @@ function generateRegexToggleCommands(targetScriptNamesToEnable = [], turnOthersO
 
 
 /**
- * MODIFIED: /regexSet 에서 사용되는 'all off' 명령어 생성 함수. (DEBUGGING VERSION)
+ * MODIFIED: /RegexSet 에서 사용되는 'all off' 명령어 생성 함수. (DEBUGGING VERSION)
  * 현재 활성화된 스크립트만 대상으로 OFF 명령어를 생성하도록 최적화. (변경 없음)
  */
 function generateAllOffCommandString(respectProtection = true) {
@@ -266,7 +266,7 @@ function generateAllOffCommandString(respectProtection = true) {
 
 // === 헬퍼 함수 수정: generateAllOnCommandString ===
 /**
- * MODIFIED: /regexSet 에서 사용되는 'all on' 명령어 생성 함수.
+ * MODIFIED: /RegexSet 에서 사용되는 'all on' 명령어 생성 함수.
  * 최적화: 현재 OFF 상태인 스크립트에 대해서만 ON 명령어를 생성합니다.
  */
 function generateAllOnCommandString() {
@@ -522,8 +522,8 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'testParseNam
     unnamedArgumentList: [ SlashCommandArgument.fromProps({ name: 'names', description: '쉼표 구분 Regex 이름 문자열', isRequired: false, typeList: [ARGUMENT_TYPE.STRING] }) ],
 }));
 */
-// (2단계) /regexSet 명령어 (콜백 함수는 변경 없으나, 사용하는 generateAllOnCommandString 함수가 최적화됨)
-// CORRECTED + ADVANCED DEBUG: /regexSet 명령어 콜백 함수 (변경 없음)
+// (2단계) /RegexSet 명령어 (콜백 함수는 변경 없으나, 사용하는 generateAllOnCommandString 함수가 최적화됨)
+// CORRECTED + ADVANCED DEBUG: /RegexSet 명령어 콜백 함수 (변경 없음)
 async function handleRegexSetCommand(args, value) {
     const rawRegexString = args.regex; // .trim() 전 원본 값
     const regexString = args.regex?.trim(); // .trim() 후 값
@@ -580,7 +580,7 @@ async function handleRegexSetCommand(args, value) {
             if (targetNames.length > 0) {
                  feedbackMessage = `Regex 설정: [${targetNames.join(', ')}] 활성화 시도 (현재 OFF 상태인 것만). 다른 활성&비보호 Regex는 비활성화 시도.`; // 피드백 메시지 수정
             } else {
-                 // regex 인자가 있었지만 파싱 결과가 빈 경우 (e.g., /regexSet regex=", , ")
+                 // regex 인자가 있었지만 파싱 결과가 빈 경우 (e.g., /RegexSet regex=", , ")
                  // 또는 regex 인자가 유효하지 않은 이름만 포함한 경우 (파싱은 되지만 아래 generate에서 target이 없음)
                  // 이 경우, OFF 명령어만 생성됨 (turnOthersOff=true 이므로)
                  commandString = generateRegexToggleCommands([], true);
@@ -608,7 +608,7 @@ async function handleRegexSetCommand(args, value) {
         }
 
     } catch (error) {
-        console.error(`[/regexSet] Error:`, error);
+        console.error(`[/RegexSet] Error:`, error);
         return `오류 발생: ${error.message}`;
     }
 }
@@ -633,8 +633,8 @@ async function handleRegexChainCommand(args, value) {
             return `오류: profile과 model 인자는 동시에 사용할 수 없습니다. 하나만 지정해주세요.`;
         }
         if (!profile && !model) {
-            // regex만 단독으로 사용하는 경우를 허용하지 않음 (사용자 요청 반영). /regexSet 사용 유도.
-            return `오류: profile 또는 model 인자 중 하나를 반드시 지정해야 합니다. Regex만 설정하려면 /regexSet 명령어를 사용하세요. 사용법: /RegexChain help=true`;
+            // regex만 단독으로 사용하는 경우를 허용하지 않음 (사용자 요청 반영). /RegexSet 사용 유도.
+            return `오류: profile 또는 model 인자 중 하나를 반드시 지정해야 합니다. Regex만 설정하려면 /RegexSet 명령어를 사용하세요. 사용법: /RegexChain help=true`;
         }
         // profile 또는 model 중 하나는 반드시 존재함
 
@@ -866,7 +866,7 @@ async function handleRegexChainQRCommand(args, value) {
 
 
 
-
+//확장 실행시 동작
 jQuery(async () => {
 	
     try {
@@ -900,16 +900,10 @@ jQuery(async () => {
 
 
 
-// /regexSet 등록 부분 (helpString 등 일부 수정)
+// /RegexSet 등록 부분 (helpString 등 일부 수정)
 SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-    name: 'regexSet',
-    helpString: `지정한 Regex 스크립트만 활성화 하거나 모든 Regex를 제어합니다.\n` +
-                `사용법:\n` +
-                `- /regexSet regex="이름1, 이름2"` + ` : 이름1, 이름2 활성화 시도 (현재 OFF 상태인 것만). 다른 활성&비보호 Regex는 비활성화 시도.\n` +
-                `- /regexSet regex=${KEYWORD_ALL_ON}` + ` : 현재 OFF 상태인 모든 스크립트 활성화 시도\n` +
-                `- /regexSet regex=${KEYWORD_ALL_OFF}` + ` : 현재 활성화된 모든 비보호 스크립트 비활성화 시도 (기본)\n` +
-                `- /regexSet regex=${KEYWORD_ALL_OFF} force=true` + ` : 현재 활성화된 모든 스크립트 강제 비활성화 시도 (보호 무시)\n` +
-                `- /regexSet` + ` : 사용 가능한 스크립트 목록 및 상태 표시`,
+    name: 'RegexSet',
+    helpString: `지정한 Regex 스크립트만 활성화 하거나 모든 Regex를 제어합니다.\n`,
     callback: handleRegexSetCommand,
     namedArgumentList: [
         SlashCommandNamedArgument.fromProps({
@@ -927,39 +921,25 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         }),
     ],
 }));
-console.log(`[${extensionName}] Command '/regexSet' registered.`);
+console.log(`[${extensionName}] Command '/RegexSet' registered.`);
 
 
 // /RegexChain 등록 부분 수정 (qr 제거, 도움말 수정)
 SlashCommandParser.addCommandObject(SlashCommand.fromProps({
     name: 'RegexChain',
-    helpString: `주요 동작(프로필/모델 로드)과 Regex 스크립트 설정을 함께 실행합니다.\n` +
-                `profile 또는 model 인자 중 하나는 반드시 필요합니다.\n` +
-                `regex 인자가 제공되면, 지정된 스크립트 중 현재 OFF 상태인 것만 활성화하고, 다른 활성&비보호 스크립트는 비활성화합니다.\n` +
-                `사용법:\n` +
-                `- /RegexChain profile="이름" regex="스크립트1,스크립트2"` + ` : 프로필 로드 + 지정 Regex 활성화(OFF->ON만) & 다른 활성&비보호 끄기 시도\n` +
-                `- /RegexChain model="이름" regex="스크립트"` + ` : 모델 로드 + 지정 Regex 활성화(OFF->ON만) & 다른 활성&비보호 끄기 시도\n` +
-                `- /RegexChain profile="이름"` + ` : 프로필만 로드 (Regex 변경 없음)\n` +
-                `- /RegexChain model="이름" regex=""` + ` : 모델 로드 + 현재 활성화된 모든 비보호 Regex 비활성화 시도\n` +
-                `- /RegexChain help=true` + ` : 도움말 보기`,
+    helpString: `프로필과 Regex 스크립트 설정을 함께 실행합니다.\n`,
     callback: handleRegexChainCommand,
     namedArgumentList: [
         SlashCommandNamedArgument.fromProps({
             name: 'profile',
-            description: '로드할 프로필 이름. model과 함께 사용할 수 없음.',
-            isRequired: false, // 콜백 시작 시 검증하므로 false 유지
-            typeList: [ARGUMENT_TYPE.STRING],
-        }),
-        SlashCommandNamedArgument.fromProps({
-            name: 'model',
-            description: '로드할 모델 이름. profile과 함께 사용할 수 없음.',
+            description: '로드할 연결 프로필 이름',
             isRequired: false, // 콜백 시작 시 검증하므로 false 유지
             typeList: [ARGUMENT_TYPE.STRING],
         }),
         // qr 인자 제거됨
         SlashCommandNamedArgument.fromProps({
             name: 'regex',
-            description: '설정할 Regex 스크립트 이름 (쉼표 구분). 지정 시 해당 스크립트만 ON 시도(OFF->ON), 다른 활성&비보호는 OFF 시도. "" 값은 활성&비보호 OFF 시도. 생략 시 Regex 변경 없음.',
+            description: '활성화할 Regex 이름 (쉼표 구분)',
             isRequired: false,
             typeList: [ARGUMENT_TYPE.STRING],
         }),
@@ -971,11 +951,7 @@ console.log(`[${extensionName}] Command '/RegexChain' (modified) registered.`);
 // /RegexChainQR 등록
 SlashCommandParser.addCommandObject(SlashCommand.fromProps({
     name: 'RegexChainQR',
-    helpString: `Quick Reply를 실행한 후, 지정된 Regex 스크립트 중 현재 OFF 상태인 것만 활성화합니다.\n` +
-                `다른 Regex 스크립트의 상태는 변경하지 않습니다.\n` +
-                `사용법:\n` +
-                `- /RegexChainQR qr="이름" regex="스크립트1,스크립트2"` + ` : QR 실행 후, 스크립트1, 스크립트2 활성화 시도 (OFF->ON만)\n` +
-                `- /RegexChainQR help=true` + ` : 도움말 보기`,
+    helpString: `Quick Reply를 실행한 후, 지정된 Regex 를 On으로 합니다.\n`,
     callback: handleRegexChainQRCommand,
     namedArgumentList: [
         SlashCommandNamedArgument.fromProps({
@@ -986,7 +962,7 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         }),
         SlashCommandNamedArgument.fromProps({
             name: 'regex',
-            description: '활성화할 Regex 스크립트 이름 (쉼표 구분, 최소 1개 필수).',
+            description: '활성화할 Regex 이름 (쉼표 구분, 최소 1개 필수).',
             isRequired: true, // 필수 인자
             typeList: [ARGUMENT_TYPE.STRING],
         }),
@@ -1002,9 +978,9 @@ window.executeQuickReplyByName('HiddenUtils.11')
 /RegexChainQR qr="11.테스팅" regex="없는거1, 생각접기"
 /RegexChain profile="ARP" regex="없는거1, 생각접기"
 
-/regexSet | /echo {{pipe}}
-/regexSet regex=_all_off_ force=true
-/regexSet regex=_all_on_ force=true
+/RegexSet | /echo {{pipe}}
+/RegexSet regex=_all_off_ force=true
+/RegexSet regex=_all_on_ force=true
 /RegexChain profile=ARP regex=생각접기 // profile 필수, ON 최적화, 다른것 끄기
 /RegexChain model=MythoMax regex=생각접기, 생각접기2 // model 필수, ON 최적화, 다른것 끄기
 /RegexChain profile=ARP // profile 필수, Regex 변경 없음
