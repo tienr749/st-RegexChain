@@ -1,0 +1,39 @@
+<div id="RegexChain_contents" class="RegexChain-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <div class="flex-container alignitemscenter margin0">
+                <b data-i18n="ext_obj_title">RegexChain</b> <!-- 베타 명시 추가 -->
+            </div>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <div id="RegexChainExtensionDrawerContents">
+                <p>
+                    프로필+정규식 / QR+정규식 확장
+                </p>
+                <p>
+				
+				<!-- START of RegexChain Settings Additions -->
+				<!-- START of RegexChain Settings Additions -->
+				<hr>
+				<label for="regexchain_protected_scripts">보호된 Regex <br> (자동 꺼짐 제외 대상)</label>
+				<div class="protected-scripts-controls">
+					<textarea id="regexchain_protected_scripts" class="text_pole" rows="3" placeholder="쉼표(,)로 구분하여 스크립트 이름을 입력하세요. 예: AlwaysOn, UtilScript"></textarea>
+					<div class="protected-scripts-buttons">
+						<button id="add_protected_script_btn" class="menu_button fa-solid fa-plus" title="보호할 스크립트 추가"></button>
+						<button id="remove_protected_script_btn" class="menu_button fa-solid fa-minus" title="보호된 스크립트 제거"></button>
+					</div>
+				</div>
+				<div id="protected_scripts_selector" class="inline-drawer-content" style="display: none; border: 1px solid grey; padding: 5px; margin-top: 5px;">
+					<!-- 스크립트 선택 목록이 동적으로 여기에 추가됩니다 -->
+				</div>
+				<small>이 목록의 스크립트는 <code>/RegexChain</code> 사용 시 자동으로 꺼지지 않습니다.<br>(<code>/regexSet regex=_all_off_ force=true</code> 명령어 제외)</small>
+				<!-- END of RegexChain Settings Additions -->
+
+				<!-- END of RegexChain Settings Additions -->
+
+            </div>
+        </div>
+    </div>
+</div>
+

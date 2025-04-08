@@ -1,0 +1,34 @@
+
+	.protected-scripts-controls {
+		display: flex;
+		align-items: flex-start; /* 버튼이 textarea 상단에 맞춰지도록 */
+	}
+	.protected-scripts-controls textarea {
+		flex-grow: 1; /* textarea가 남은 공간을 채우도록 */
+		margin-right: 5px; /* 버튼과의 간격 */
+	}
+	.protected-scripts-buttons {
+		display: flex;
+		flex-direction: column; /* 버튼 세로 배치 */
+	}
+	.protected-scripts-buttons button {
+		margin-bottom: 3px; /* 버튼 간 간격 */
+	}
+	#protected_scripts_selector button { /* 동적 목록 안의 버튼 스타일 */
+		display: block; /* 한 줄에 하나씩 */
+		width: 100%;
+		text-align: left;
+		margin-bottom: 2px;
+		padding: 2px 5px;
+		border: 1px solid #ccc;
+		cursor: pointer;
+		color: var(--SmartThemeBodyColor);
+		background-color: var(--SmartThemeBlurTintColor);
+	}
+	#protected_scripts_selector button:hover {
+		/* background-color: #eee; */
+	}
+	#protected_scripts_selector .script-action-icon { /* 추가/제거 아이콘 */
+		float: right;
+		margin-left: 5px;
+	}
