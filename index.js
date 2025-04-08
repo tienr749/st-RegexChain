@@ -1,4 +1,4 @@
-// --- START OF FILE index.js (v1.3단계o 기반 + RegexChainQr 분리 및 ON 명령어 최적화) ---
+// --- START OF FILE index.js (v1.3단계o 기반 + RegexChainQR 분리 및 ON 명령어 최적화) ---
 
 // 필요한 SillyTavern 모듈 임포트
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
@@ -831,19 +831,19 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({
 console.log(`[${extensionName}] Command '/RegexChain' (modified) registered.`);
 
 
-// === 4단계: 신규 /RegexChainQr 슬래시 커맨드 ===
+// === 4단계: 신규 /RegexChainQR 슬래시 커맨드 ===
 
 /**
- * NEW: /RegexChainQr 명령어 콜백 함수
+ * NEW: /RegexChainQR 명령어 콜백 함수
  * QR 실행 후 지정된 Regex 스크립트 중 현재 OFF 상태인 것만 활성화합니다.
  * 다른 스크립트는 비활성화하지 않습니다.
  */
-async function handleRegexChainQrCommand(args, value) {
+async function handleRegexChainQRCommand(args, value) {
     const { qr, regex } = args;
     let feedbackMessages = [];
     let warnings = [];
 
-    console.log(`[${extensionName} DEBUG - handleRegexChainQrCommand] Received args:`, args);
+    console.log(`[${extensionName} DEBUG - handleRegexChainQRCommand] Received args:`, args);
 
     try {
         // 1. 인자 유효성 검사
@@ -898,7 +898,7 @@ async function handleRegexChainQrCommand(args, value) {
         // 실제 ON 명령어를 생성할 대상 필터링: 존재하고 & 현재 OFF 상태인 스크립트
         const scriptsToActuallyTurnOn = existingNamesToEnable.filter(name => {
              const isEnabled = currentlyEnabledScripts.includes(name);
-             console.log(`[${extensionName} DEBUG - handleRegexChainQrCommand] Checking script "${name}" for ON: currently enabled = ${isEnabled}. Needs ON: ${!isEnabled}`);
+             console.log(`[${extensionName} DEBUG - handleRegexChainQRCommand] Checking script "${name}" for ON: currently enabled = ${isEnabled}. Needs ON: ${!isEnabled}`);
              return !isEnabled;
         });
 
@@ -925,7 +925,7 @@ async function handleRegexChainQrCommand(args, value) {
                 feedbackMessages.push("완료.");
             } catch (cmdError) {
                 feedbackMessages.push("실패.");
-                console.error(`[/RegexChainQr] Error executing regex command after QR:`, cmdError);
+                console.error(`[/RegexChainQR] Error executing regex command after QR:`, cmdError);
             }
         } else {
             // 실행할 명령어가 없는 경우 (이미 ON 상태 등)
@@ -940,20 +940,20 @@ async function handleRegexChainQrCommand(args, value) {
         return finalFeedback;
 
     } catch (error) {
-        console.error(`[/RegexChainQr] Unexpected error:`, error);
+        console.error(`[/RegexChainQR] Unexpected error:`, error);
         return `예상치 못한 오류 발생: ${error.message}`;
     }
 }
 
-// /RegexChainQr 등록
+// /RegexChainQR 등록
 SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-    name: 'RegexChainQr',
+    name: 'RegexChainQR',
     helpString: `Quick Reply를 실행한 후, 지정된 Regex 스크립트 중 현재 OFF 상태인 것만 활성화합니다.\n` +
                 `다른 Regex 스크립트의 상태는 변경하지 않습니다.\n` +
                 `사용법:\n` +
-                `- /RegexChainQr qr="이름" regex="스크립트1,스크립트2"` + ` : QR 실행 후, 스크립트1, 스크립트2 활성화 시도 (OFF->ON만)\n` +
-                `- /RegexChainQr help=true` + ` : 도움말 보기`,
-    callback: handleRegexChainQrCommand,
+                `- /RegexChainQR qr="이름" regex="스크립트1,스크립트2"` + ` : QR 실행 후, 스크립트1, 스크립트2 활성화 시도 (OFF->ON만)\n` +
+                `- /RegexChainQR help=true` + ` : 도움말 보기`,
+    callback: handleRegexChainQRCommand,
     namedArgumentList: [
         SlashCommandNamedArgument.fromProps({
             name: 'qr',
@@ -969,14 +969,14 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         }),
     ],
 }));
-console.log(`[${extensionName}] Command '/RegexChainQr' registered.`);
+console.log(`[${extensionName}] Command '/RegexChainQR' registered.`);
 
 
 // --- END OF FILE index.js ---
 /*  아래는 테스트용 코드입니다
 
 window.executeQuickReplyByName('HiddenUtils.11')
-/RegexChainQr qr="11.테스팅" regex="없는거1, 생각접기"
+/RegexChainQR qr="11.테스팅" regex="없는거1, 생각접기"
 /RegexChain profile="ARP" regex="없는거1, 생각접기"
 
 /regexSet | /echo {{pipe}}
@@ -986,7 +986,7 @@ window.executeQuickReplyByName('HiddenUtils.11')
 /RegexChain model=MythoMax regex=생각접기, 생각접기2 // model 필수, ON 최적화, 다른것 끄기
 /RegexChain profile=ARP // profile 필수, Regex 변경 없음
 /RegexChain model=MythoMax regex="" // model 필수, 활성&비보호 끄기 시도
-/RegexChainQr qr=자동번역OFF regex=생각접기 // qr 필수, 지정된것만 ON (최적화), 다른것 안 끔
-/RegexChainQr qr=자동번역ON regex=생각접기, 생각접기2 // qr 필수, 지정된것만 ON (최적화), 다른것 안 끔
+/RegexChainQR qr=자동번역OFF regex=생각접기 // qr 필수, 지정된것만 ON (최적화), 다른것 안 끔
+/RegexChainQR qr=자동번역ON regex=생각접기, 생각접기2 // qr 필수, 지정된것만 ON (최적화), 다른것 안 끔
 
 */
